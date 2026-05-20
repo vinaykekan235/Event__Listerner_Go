@@ -1,0 +1,38 @@
+database:
+  dsn: "${DATABASE_URL}"
+
+chains:
+  - name: xdc-apothem
+    chain_id: 51
+    rpc_url: "wss://ws.apothem.network"
+    confirmations: 5
+    poll_interval_ms: 5000
+    block_batch_size: 2000
+    contracts:
+      - name: AtlasVault
+        address: "0x1B6DEC473B894A80EEa430FC959daa01F4E2db0e"
+        abi_path: "internal/contracts/abi/atlas_vault.json"
+        start_block: 81942907
+        events:
+          - VaultDeposit
+
+      - name: FerroxVault
+        address: "0x56738B7ed0C785041A98E6b66376CC00e59fc1cD"
+        abi_path: "internal/contracts/abi/ferrox_vault.json"
+        start_block: 82071321
+        events:
+          - VaultDeposit
+
+  - name: redbelly-testnet
+    chain_id: 153
+    rpc_url: "https://governors.testnet.redbelly.network"
+    confirmations: 3
+    poll_interval_ms: 5000
+    block_batch_size: 100
+    contracts:
+      - name: LucaVault
+        address: "0xa0b5304563396D80D3A76E455f7c224533509731"
+        abi_path: "internal/contracts/abi/luca_vault.json"
+        start_block: 2969474
+        events:
+          - VaultDeposit

@@ -1,0 +1,214 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "initialOwner", "type": "address" },
+      { "internalType": "address", "name": "_usdcAddress", "type": "address" },
+      { "internalType": "address", "name": "_atlasTokenAddress", "type": "address" },
+      { "internalType": "address", "name": "_taxAddress", "type": "address" },
+      { "internalType": "address", "name": "_treasuryWallet", "type": "address" },
+      { "internalType": "address", "name": "_identityRegistry", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+    "name": "OwnableInvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ReentrancyGuardReentrantCall", "type": "error" },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "positionId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "AtlasTokensMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "admin", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "ContractPaused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "admin", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "ContractUnpaused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "oldRate", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newRate", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "DepositTaxRateUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "oldRegistry", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newRegistry", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "IdentityRegistryUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "positionId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint8", "name": "oldStatus", "type": "uint8" },
+      { "indexed": false, "internalType": "uint8", "name": "newStatus", "type": "uint8" },
+      { "indexed": false, "internalType": "uint256", "name": "updateTime", "type": "uint256" }
+    ],
+    "name": "PositionStatusUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "positionId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "availableTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "requestTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint8", "name": "tier", "type": "uint8" },
+      { "indexed": false, "internalType": "uint256", "name": "originalAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "currentValue", "type": "uint256" }
+    ],
+    "name": "RedemptionRequested",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bool", "name": "enabled", "type": "bool" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "TVLCheckToggled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "oldLimit", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newLimit", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "TVLLimitUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "oldTVL", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newTVL", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "TVLUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "oldAddress", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "TaxAddressUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "oldAddress", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+    ],
+    "name": "TreasuryWalletUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "positionId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint8", "name": "tier", "type": "uint8" },
+      { "indexed": false, "internalType": "uint256", "name": "originalAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "principalAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "taxAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "bool", "name": "rolloverEnabled", "type": "bool" },
+      { "indexed": false, "internalType": "uint256", "name": "lockEndTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "depositTime", "type": "uint256" },
+      { "indexed": false, "internalType": "string", "name": "vaultName", "type": "string" },
+      { "indexed": false, "internalType": "string", "name": "vaultSymbol", "type": "string" },
+      { "indexed": false, "internalType": "uint256", "name": "apyRate", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "lockPeriodDays", "type": "uint256" }
+    ],
+    "name": "VaultDeposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "positionId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "principalAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "rewardsAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "totalAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "redemptionTax", "type": "uint256" },
+      { "indexed": false, "internalType": "uint8", "name": "tier", "type": "uint8" },
+      { "indexed": false, "internalType": "string", "name": "vaultName", "type": "string" },
+      { "indexed": false, "internalType": "string", "name": "vaultSymbol", "type": "string" },
+      { "indexed": false, "internalType": "uint256", "name": "depositTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "lockEndTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "redeemTime", "type": "uint256" }
+    ],
+    "name": "VaultRedeemed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "positionId", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newLockEndTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "rolloverTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint8", "name": "tier", "type": "uint8" }
+    ],
+    "name": "VaultRolledOver",
+    "type": "event"
+  }
+]
